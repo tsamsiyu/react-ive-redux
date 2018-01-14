@@ -1,8 +1,13 @@
-This is alternative implementation of `react-redux` library with another update-strategy.
+# Motivation
 
-The approach is based on the knowledge of the each state element about its access path.
-By 'access path' means way by which element in store is accessed, for example `todos.0.title`.
+The popular `react-redux` library uses `shallow equality` approach to detect whether the state was updated. This can lead to a large number of comparisons and as a result to the slowing down the user interface.
 
-Based on this feature each component can observe its slice (state provided from `mapStateToProps`) and react on changes of received dependencies.
+# Inspiration
 
-Package is in development. At now I'm trying to check how and when this approach can be really helpful.
+Inspired by `mobx` obserable approach this library proposes a point strategy for detecting cases when component should be updated.
+
+# Explanation
+
+The proposed approach is based on the knowledge by each state element about its accessibility path in whole store object. By 'accessibility path' means way by which element in store is accessed, for example `todos.0.title`. By `element` means each property of each object in store tree.
+
+Based on this feature each component can observe its state slice provided by `mapStateToProps`. Watching that slice component can determine accessibilty paths on which it depends and at the moment when store call `subscribe` component will have to compare only its own dependencies.
