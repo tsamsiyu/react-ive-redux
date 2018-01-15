@@ -1,22 +1,38 @@
 import { createStore } from 'redux'
 import { awareState } from 'react-ive-redux'
+import Chance from 'chance'
 
-const initialState = {
-    todos: [
-      {
-        id: 1,
-        title: 'Read Hobbit',
-      }
-    ]
-};
-  
+const chance = new Chance()
+
+let regenerateIndex = 0;
+
 const store = createStore((state, action) => {
-    if (!state) {
-      state = initialState;
-    } else {
-      state.todos[0].id = 2; // it's ok at now
+  if (regenerateIndex > 5) {
+    regenerateIndex = 0;
+  } else {
+    regenerateIndex++;
+  }
+  if (!state) {
+    state = {
+      todos: Array.from(new Array(100), (val, id) => ({
+        id,
+        title: chance.first(),
+        tags: Array.from(new Array(5), (val, tagid) => ({
+          id: tagid,
+          label: chance.word(),
+        }))
+      }))
     }
-    return state;
+  }
+  if (regenerateIndex == 0) {
+    console.log('regenerate');
+    state.todos[47].tags = Array.from(new Array(5), (val, tagid) => ({
+      id: tagid,
+      label: chance.word(),
+    }))
+  }
+
+  return state;
 }, null);
 
 const prevGetState = store.getState;

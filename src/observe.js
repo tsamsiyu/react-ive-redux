@@ -2,7 +2,7 @@ import React from 'react';
 
 export function observe(state, listener, newState = {}) {
     if (Array.isArray(state)) {
-        return state.map(item => observe(item, listener, newState));
+        return state.map(item => observe(item, listener, {}));
     } else {
         Object.keys(state).forEach((property) => {
             Object.defineProperty(newState, property, {

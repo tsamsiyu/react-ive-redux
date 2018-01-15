@@ -1,44 +1,39 @@
-import React from 'react';
-import { render } from 'react-dom';
-import { awareState, observe, connect } from 'react-ive-redux';
-import { Provider } from 'react-redux';
-import store from 'store';
-
-console.log('store created', store);
-
-const clearer = setInterval(() => {
-  store.dispatch({
-    type: 'SOMETHING',
-  });
-}, 1000);
+import React from 'react'
+import { render } from 'react-dom'
+import { awareState, observe, connect as newConnect } from 'react-ive-redux'
+import { connect } from 'react-redux'
+import { Provider } from 'react-redux'
+import store from 'store'
+import { App } from './App.jsx'
 
 setTimeout(() => {
-  clearInterval(clearer);
-}, 2000);
+  store.dispatch({type: 'SOMETHING'});
+  store.dispatch({type: 'SOMETHING'});
+  store.dispatch({type: 'SOMETHING'});
+  store.dispatch({type: 'SOMETHING'});
+  store.dispatch({type: 'SOMETHING'});
+  store.dispatch({type: 'SOMETHING'});
+}, 500);
 
-const connector = connect(function (state) {
-  return state.todos;
-});
+const mapStateToProps = state => state
 
-class App extends React.Component {
-  render () {
-    return <div>
-      Hello React project
-      <br/>
-      { this.props.store.map((todo) => (
-        <div key={ todo.id }>
-          { todo.id } : { todo.title }
-        </div>
-      )) }
-    </div>;
-  }
-}
-
-const AppWithStore = connector(App);
+const AppWithStore1 = newConnect(mapStateToProps)(App);
+const AppWithStore2 = connect(mapStateToProps)(App);
 
 render(
   <Provider store={store}>
-    <AppWithStore store={store}/>
+    <table>
+      <tbody>
+      <tr>
+        <td>
+          <AppWithStore1 store={store} type="new" />
+        </td>
+        <td>
+          <AppWithStore2 store={store} type="stable" />
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </Provider>, 
   document.getElementById('app')
 );
